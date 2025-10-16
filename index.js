@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const keys = require("./keys.json");
+
 require("dotenv").config();
 const MONGO_URL = process.env.DB_URI;
 const PORT = process.env.PORT;
@@ -42,4 +44,4 @@ app.listen(PORT, () => {
 // Dependencias
 
 // npm install
-// npm i express body-parser mongoose multer cors jsonwebtoken bcrypt dotenv mongodb
+// npm i express body-parser mongoose multer cors jsonwebtoken bcrypt dotenv mongodb web-push

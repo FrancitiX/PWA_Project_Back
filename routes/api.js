@@ -28,5 +28,6 @@ router.post("/notifications", notificationController.getPushNotifications);
 router.get("/getNotification", notificationController.getNotification);
 router.put("/getNotification", notificationController.updateNotification);
 router.delete("/getNotification", notificationController.deleteNotification);
+router.post("/sendPush", notificationController.sendPush);
 
 module.exports = router;

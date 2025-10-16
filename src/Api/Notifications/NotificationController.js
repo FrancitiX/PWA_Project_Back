@@ -1,11 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const webpush = require("web-push");
+const keys = require("../../../keys.json");
+
 const app = express();
 app.use(express.json());
 
 require("./NotificationSchema");
 const Notification = mongoose.model("notifications");
+
+webpush.setVapidDetails("mailto:sucorreo", keys.publicKey, keys.privateKey);
 
 const idNotification = (title, type) => {
   if (!type) {
@@ -38,7 +43,6 @@ const newNotification = async (req, res) => {
       recipients,
     } = req.body;
     console.log("Se añadio una Notificacion ", req.body);
-
 
     if (!title || !short || !type || !recipients) {
       return res
@@ -139,10 +143,10 @@ const getNotifications = async (req, res) => {
 
 const getPushNotifications = async (req, res) => {
   const { user } = req.body;
-  
+
   try {
     const notifications = await Notification.find({ "recipients.user": user });
-    
+
     res.status(200).send({ status: "ok", data: notifications });
   } catch (error) {
     console.error("Error al obtener las multas:", error);
@@ -183,6 +187,28 @@ const deleteNotification = async (req, res) => {
   }
 };
 
+const sendPush = async (req, res) => {
+  const sub = req.body;
+  console.log("Notificacion activa");
+
+  await webpush.sendNotification(
+    sub,
+    JSON.stringify({
+      titulo: "hola",
+        mensaje: "holis",
+        icon: "nameimagen.jpg"
+      })
+    )
+    .then((succes) => {
+      res.json({ mensaje: "ok" });
+    })
+    .catch(async (error) => {
+      if (error.body.includes("expired") && error.statusCode == 410) {
+        console.log("suscripcion expirada");
+      }
+    });
+};
+
 module.exports = {
   newNotification,
   getPushNotifications,
@@ -190,4 +216,5 @@ module.exports = {
   getNotifications,
   updateNotification,
   deleteNotification,
+  sendPush,
 };
