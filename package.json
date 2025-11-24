@@ -3,12 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node index.js",
+    "dev" : "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "PWA",
+    "Backend",
+    "NodeJS",
+    "ExpressJS",
+    "MongoDB",
+    "JS"
+  ],
+  "author": "FrancitiX",
   "license": "ISC",
-  "description": "",
+  "description": "Backend for smartOrder",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
