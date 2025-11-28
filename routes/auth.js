@@ -6,7 +6,7 @@ const user_imageController = require("../src/Api/User_Image/user_imageController
 const rolesController = require("../src/Api/Role/RolesController");
 const configurationsController = require("../src/Api/Configs/configController");
 
-const authMiddleware = require('../Middleware/authMiddleware');
+const authMiddleware = require('../src/Middleware/authMiddleware');
 
 // Rutas para autenticación de usuarios
 router.post("/newUser", authMiddleware, userController.registerUser);
