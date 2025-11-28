@@ -22,7 +22,16 @@ const {
 } = require("../Tokens/TokenController");
 
 const registerUser = async (req, res) => {
-  const { name, cellphone, password, email, role } = req.body;
+  const {
+    name,
+    paternalName,
+    maternalName,
+    username,
+    cellphone,
+    password,
+    email,
+    role,
+  } = req.body;
   console.log("Registro: ", name.name);
 
   try {
@@ -41,24 +50,26 @@ const registerUser = async (req, res) => {
       });
       console.log("El correo ya está registrado!");
     } else {
-      // await User.create({
-      //   name: {
-      //     name: name.name,
-      //     paternal_surname: name.paternal_surname,
-      //     maternal_surname: name.maternal_surname,
-      //   },
-      //   email,
-      //   cellphone: cellphone,
-      //   salt: salt,
-      //   password: enPassword,
-      //   role: role,
-      //   favrestaurants: [],
-      // });
-      // await userImage.create({
-      //   email: email,
-      //   image: "",
-      //   bgimage: "",
-      // });
+      await User.create({
+        name: {
+          name: name,
+          paternal_surname: paternalName,
+          maternal_surname: maternalName,
+        },
+        username,
+        email,
+        cellphone: cellphone,
+        salt: salt,
+        password: enPassword,
+        role: role,
+        favGames: [],
+        myGames: [],
+      });
+      await userImage.create({
+        email: email,
+        image: "",
+        bgimage: "",
+      });
       res.status(201).json({ status: "ok", data: "Usuario creado" });
       console.log("Usuario creado exitosamente");
     }

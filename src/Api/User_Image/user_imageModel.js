@@ -10,7 +10,7 @@ const userImageModel = new Schema(
   },
   {
     timestamps: true,
-    collection: "userImage",
+    collection: "user_Image",
   }
 );
 

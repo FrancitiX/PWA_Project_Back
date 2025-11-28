@@ -4,22 +4,22 @@ const Schema = mongoose.Schema;
 const UserModel = new Schema(
   {
     name: {
-      type: {
-        name: String,
-        paternal_surname: String,
-        maternal_surname: String,
-      },
+      name: String,
+      paternal_surname: String,
+      maternal_surname: String,
     },
+    username: { type: String, unique: true },
     email: { type: String, unique: true },
     cellphone: {
       countryCode: { type: String, default: "+52" },
       number: { type: String, default: "" },
-     },
+    },
     salt: String,
     password: String,
     role: Number,
-    favrestaurants: Array,
-    date: { date: String, time: String }
+    favGames: Array,
+    myGames: Array,
+    date: { date: String, time: String },
   },
   {
     collection: "users",

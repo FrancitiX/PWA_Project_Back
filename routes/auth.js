@@ -23,12 +23,27 @@ router.get("/roles/:id", authMiddleware, rolesController.getRole);
 router.get("/roles", authMiddleware, rolesController.getAllRoles);
 router.delete("/roles/:id", authMiddleware, rolesController.deleteRole);
 
-
 // Rutas para configuraciones
-router.post("/addConfiguration", authMiddleware, configurationsController.createConfig);
-router.get("/configurations/:id", authMiddleware, configurationsController.getConfig);
+router.post(
+  "/addConfiguration",
+  authMiddleware,
+  configurationsController.createConfig
+);
+router.get(
+  "/configurations/:id",
+  authMiddleware,
+  configurationsController.getConfig
+);
 // router.get("/configurations", authMiddleware, configurationsController.getAllConfigs);
-router.put("/configurations/:id", authMiddleware, configurationsController.updateConfig);
-router.delete("/configurations/:id", authMiddleware, configurationsController.deleteConfig);
+router.put(
+  "/configurations/:id",
+  authMiddleware,
+  configurationsController.updateConfig
+);
+router.delete(
+  "/configurations/:id",
+  authMiddleware,
+  configurationsController.deleteConfig
+);
 
 module.exports = router;

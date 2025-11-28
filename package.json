@@ -17,7 +17,7 @@
   ],
   "author": "FrancitiX",
   "license": "ISC",
-  "description": "Backend for smartOrder",
+  "description": "Backend for PWA Project",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
