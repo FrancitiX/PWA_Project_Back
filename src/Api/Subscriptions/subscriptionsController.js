@@ -36,6 +36,7 @@ const saveSubscription = async (req, res) => {
 };
 
 const notifyUser = async (req, res) => {
+    const { title, message} = req.body
   try {
     const subs = await NotificationSubscription.find();
 
@@ -46,8 +47,8 @@ const notifyUser = async (req, res) => {
           keys: s.keys,
         },
         {
-          title: "Hola!",
-          body: "Notificación de prueba 🎉",
+          title: title,
+          body: message,
         }
       );
     }
