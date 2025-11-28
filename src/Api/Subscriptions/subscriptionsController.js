@@ -36,7 +36,7 @@ const saveSubscription = async (req, res) => {
 };
 
 const notifyUser = async (req, res) => {
-    const { title, message} = req.body
+    const { title, message } = req.body
   try {
     const subs = await NotificationSubscription.find();
 
