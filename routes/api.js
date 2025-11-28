@@ -35,7 +35,7 @@ router.post(
   "/save-subscription",
   notificationController.saveSubscription
 );
-router.get("/send-test", notificationController.notifyUser);
+router.post("/send-test", notificationController.notifyUser);
 
 
 module.exports = router;
