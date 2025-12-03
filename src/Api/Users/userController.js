@@ -21,6 +21,15 @@ const {
   close_All_Sessions,
 } = require("../Tokens/TokenController");
 
+const getIP = (req) => {
+  return (
+    req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+    req.socket?.remoteAddress ||
+    req.connection?.remoteAddress ||
+    "0.0.0.0"
+  );
+};
+
 const registerUser = async (req, res) => {
   const {
     name,
@@ -32,7 +41,6 @@ const registerUser = async (req, res) => {
     email,
     role,
   } = req.body;
-  console.log("Registro: ", name.name);
 
   try {
     const salt = await bcrypt.genSalt(12);
@@ -40,8 +48,6 @@ const registerUser = async (req, res) => {
     // const enPassword = await bcrypt.hash(pepper + password + salt, 12);
     const enPassword = await bcrypt.hash(pepper + password + salt, 12);
     const oldEmail = await User.findOne({ email: email });
-
-    console.log("Contraseña registrada: " + pepper + password + salt);
 
     if (oldEmail) {
       res.status(400).json({
@@ -64,6 +70,8 @@ const registerUser = async (req, res) => {
         role: role,
         favGames: [],
         myGames: [],
+        cartGames: [],
+        wishlistGames: [],
       });
       await userImage.create({
         email: email,
@@ -82,13 +90,13 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { email, password, remember } = req.body;
-  const ip = req.connection.remoteAddress;
-  console.log("user login: " + email);
+  const { userid, password, remember } = req.body;
+  const ip = getIP(req);
+  console.log("user login: " + userid);
 
   try {
     const user = await User.findOne({
-      email: email,
+      $or: [{ email: userid }, { username: userid }],
     });
 
     if (!user) {
@@ -96,51 +104,44 @@ const loginUser = async (req, res) => {
         .status(404)
         .json({ status: "error", data: "Usuario no registrado" });
     }
+
     const { salt } = user;
     const pepper = process.env.PEPPER;
-    // const passwordComplete = pepper + password + salt;
     const fullPassword = pepper + password + salt;
-    const isPasswordValid = await bcrypt.compare(
-      // pepper + password + salt,
-      fullPassword,
-      user.password
-    );
-
-    console.log("Contraseña login: " + fullPassword);
+    const isPasswordValid = await bcrypt.compare(fullPassword, user.password);
 
     if (!isPasswordValid) {
       return res
         .status(401)
-        .json({ status: "wrong password", data: "Contraseña incorrecta" });
+        .json({ status: "error", data: "Contraseña incorrecta" });
     }
 
-    // Generar token JWT
     let token;
     const payload = {
+      username: user.username,
       email: user.email,
-      name: user.name,
-      cellphone: user.cellphone,
       role: user.role,
-      favrestaurants: user.favrestaurants,
     };
+
     if (!remember) {
       token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
     } else {
-      const session = email + ip;
+      const session = user.username + ip;
       token = jwt.sign(payload, process.env.JWT_SECRET, {});
-      const dbToken = await newSession(email, token, session);
-      console.log("token guardado: " + dbToken);
+      // const dbToken = await newSession(user.username, token, session);
+      console.log("session: " + session);
+      token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
     }
 
     return res.status(200).json({
       status: "ok",
-      user_name: user.name,
+      user_name: user.username,
       user_email: user.email,
-      user_cellphone: user.cellphone,
       user_role: user.role,
-      user_favrestaurants: user.favrestaurants,
       token: token,
     });
   } catch (error) {
@@ -153,9 +154,6 @@ const loginUser = async (req, res) => {
 
 const userData = async (req, res) => {
   const user = req.user;
-
-  console.log("data del usuario");
-  console.log(user);
 
   try {
     User.findOne({ email: user.email })

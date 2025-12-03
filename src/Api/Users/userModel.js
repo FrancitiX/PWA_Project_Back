@@ -19,6 +19,8 @@ const UserModel = new Schema(
     role: Number,
     favGames: Array,
     myGames: Array,
+    cartGames: Array,
+    wishlistGames: Array,
     date: { date: String, time: String },
   },
   {
